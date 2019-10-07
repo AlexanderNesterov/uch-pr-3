@@ -39,7 +39,7 @@ namespace WpfApp3
             sizeDifference = canvas.Margin.Top - 8;
         }
 
-        private void save_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void save_MouseLeftButtonDown(object sender, RoutedEventArgs e)
         {
             Console.WriteLine("save button");
 
@@ -64,7 +64,7 @@ namespace WpfApp3
             }
         }
 
-        private void open_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void open_MouseLeftButtonDown(object sender, RoutedEventArgs e)
         {
             Console.WriteLine("open button");
 
@@ -119,7 +119,7 @@ namespace WpfApp3
             {
                 Polygon polygon = new Polygon();
                 PointCollection collection = new PointCollection();
-                
+
                 foreach (UIElement el in canvas.Children)
                 {
                     if (el.GetType() != typeof(Line))
@@ -209,12 +209,12 @@ namespace WpfApp3
             draw = false;
         }
 
-        private void fill_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void fill_PreviewMouseLeftButtonDown(object sender, RoutedEventArgs e)
         {
             fillSomething = !fillSomething;
         }
 
-        private void rect_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void rect_PreviewMouseLeftButtonDown(object sender, RoutedEventArgs e)
         {
             drawRect = !drawRect;
         }
