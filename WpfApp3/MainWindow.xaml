@@ -1,0 +1,19 @@
+﻿<Window x:Name="window" x:Class="WpfApp3.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp3"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="652.778" Width="972.222">
+    <Grid x:Name="grid" Height="622" VerticalAlignment="Bottom">
+
+        <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="549" VerticalAlignment="Top" Width="964" PreviewMouseLeftButtonDown="canvas_PreviewMouseLeftButtonDown" PreviewMouseMove="canvas_PreviewMouseMove" PreviewMouseLeftButtonUp="canvas_PreviewMouseLeftButtonUp" Background="#FFE6E0E0" Margin="0,73,0,0" >
+
+        </Canvas>
+        <Button x:Name="save" Content="Save" HorizontalAlignment="Left" Margin="32,28,0,0" VerticalAlignment="Top" Width="75" PreviewMouseLeftButtonDown="save_MouseLeftButtonDown"/>
+        <Button x:Name="open" Content="Open" HorizontalAlignment="Left" Margin="133,28,0,0" VerticalAlignment="Top" Width="75" PreviewMouseLeftButtonDown="open_MouseLeftButtonDown"/>
+        <Button x:Name="fill" Content="Fill" HorizontalAlignment="Left" Margin="227,28,0,0" VerticalAlignment="Top" Width="75" PreviewMouseLeftButtonDown="fill_PreviewMouseLeftButtonDown"/>
+        <Button x:Name="rectan" Content="Rect" HorizontalAlignment="Left" Margin="318,28,0,0" VerticalAlignment="Top" Width="75" PreviewMouseLeftButtonDown="rect_PreviewMouseLeftButtonDown"/>
+    </Grid>
+</Window>
