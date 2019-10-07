@@ -32,6 +32,7 @@ namespace WpfApp3
         private double previousY = -1;
         private double sizeDifference;
         private Rectangle rectangle;
+        private Point startPoint;
 
         public MainWindow()
         {
@@ -102,12 +103,17 @@ namespace WpfApp3
 
             if (drawRect)
             {
+
+                startPoint = e.GetPosition(canvas);
                 rectangle = new Rectangle();
-                rectangle.Margin = new Thickness(e.GetPosition(null).X, e.GetPosition(null).Y - sizeDifference, 0, 0);
+                //rectangle.Margin = new Thickness(e.GetPosition(null).X, e.GetPosition(null).Y - sizeDifference, 0, 0);
                 //rect.Height = 30;
                 //rect.Width = 50;
                 rectangle.Stroke = Brushes.Black;
                 rectangle.StrokeThickness = 4;
+
+                Canvas.SetLeft(rectangle, startPoint.X);
+                Canvas.SetTop(rectangle, startPoint.Y);
 
                 startDrawRect = true;
 
@@ -158,9 +164,22 @@ namespace WpfApp3
         {
             if (drawRect && startDrawRect)
             {
+                var pos = e.GetPosition(canvas);
+
+                var x = Math.Min(pos.X, startPoint.X);
+                var y = Math.Min(pos.Y, startPoint.Y);
+
+                var w = Math.Max(pos.X, startPoint.X) - x;
+                var h = Math.Max(pos.Y, startPoint.Y) - y;
+
+                rectangle.Width = w;
+                rectangle.Height = h;
+
+                Canvas.SetLeft(rectangle, x);
+                Canvas.SetTop(rectangle, y);
                 //Console.WriteLine(rectangle.Margin.Top + " " + rectangle.Margin.Left);
-                rectangle.Height = Math.Abs(rectangle.Margin.Top - e.GetPosition(null).Y + sizeDifference);
-                rectangle.Width = Math.Abs(rectangle.Margin.Left - e.GetPosition(null).X);
+                //rectangle.Height = Math.Abs(rectangle.Margin.Top - e.GetPosition(null).Y + sizeDifference);
+                //rectangle.Width = Math.Abs(rectangle.Margin.Left - e.GetPosition(null).X);
 
                 return;
             }
@@ -201,6 +220,10 @@ namespace WpfApp3
             //Console.WriteLine("canvas mouse up");
             if (drawRect)
             {
+                
+                var X = e.GetPosition(null).X;
+                var Y = e.GetPosition(null).Y;
+                // if (X < rectangle.ma)
                 canvas.Children.Add(rectangle);
                 startDrawRect = false;
             }
