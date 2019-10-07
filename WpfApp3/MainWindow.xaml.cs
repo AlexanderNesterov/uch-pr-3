@@ -97,28 +97,40 @@ namespace WpfApp3
             }
         }
 
+        private void clickOnRect(object sender, MouseButtonEventArgs e)
+        {
+            if(drawRect)
+                return;
+            else
+            {
+                var rect = sender as Rectangle;
+                rect.Fill = Brushes.Red;
+            }
+        }
+
         private void canvas_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             //Console.WriteLine(canvas.Height + " " + window.Height + " " + sizeDifference);
 
             if (drawRect)
             {
-
                 startPoint = e.GetPosition(canvas);
                 rectangle = new Rectangle();
-                //rectangle.Margin = new Thickness(e.GetPosition(null).X, e.GetPosition(null).Y - sizeDifference, 0, 0);
-                //rect.Height = 30;
-                //rect.Width = 50;
                 rectangle.Stroke = Brushes.Black;
                 rectangle.StrokeThickness = 4;
+                // BrushConverter bc = new BrushConverter();
+                // Brush brush = (Brush)bc.ConvertFrom("#00363683");
+                rectangle.Fill = Brushes.White;
+                rectangle.MouseLeftButtonDown += new System.Windows.Input.MouseButtonEventHandler(this.clickOnRect);
 
                 Canvas.SetLeft(rectangle, startPoint.X);
                 Canvas.SetTop(rectangle, startPoint.Y);
 
                 startDrawRect = true;
 
+                canvas.Children.Add(rectangle);
+
                 return;
-                //canvas.Children.Add(rect);
             }
 
             if (fillSomething)
@@ -177,9 +189,6 @@ namespace WpfApp3
 
                 Canvas.SetLeft(rectangle, x);
                 Canvas.SetTop(rectangle, y);
-                //Console.WriteLine(rectangle.Margin.Top + " " + rectangle.Margin.Left);
-                //rectangle.Height = Math.Abs(rectangle.Margin.Top - e.GetPosition(null).Y + sizeDifference);
-                //rectangle.Width = Math.Abs(rectangle.Margin.Left - e.GetPosition(null).X);
 
                 return;
             }
@@ -220,14 +229,9 @@ namespace WpfApp3
             //Console.WriteLine("canvas mouse up");
             if (drawRect)
             {
-                
-                var X = e.GetPosition(null).X;
-                var Y = e.GetPosition(null).Y;
-                // if (X < rectangle.ma)
-                canvas.Children.Add(rectangle);
+                //canvas.Children.Add(rectangle);
                 startDrawRect = false;
             }
-
 
             draw = false;
         }
