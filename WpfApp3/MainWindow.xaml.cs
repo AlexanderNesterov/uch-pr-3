@@ -26,12 +26,14 @@ namespace WpfApp3
     {
         private bool isDrawWithPencil = false;
         private bool startDrawWithPencil = false;
-        private bool fillSomething = false;
-        private bool drawRect = false;
+        private bool isFill = false;
+        private bool isDrawRect = false;
         private bool startDrawRect = false;
         private double previousX = -1;
         private double previousY = -1;
         private double sizeDifference;
+        private double thickness = 1.0;
+        private SolidColorBrush fillColor = Brushes.White;
         private Rectangle rectangle;
         private Point startPoint;
 
@@ -107,7 +109,7 @@ namespace WpfApp3
                 return;
             }
 
-            if (drawRect)
+            if (isDrawRect)
             {
                 drawRectangle(e);
                 return;
@@ -116,7 +118,7 @@ namespace WpfApp3
 
         private void canvas_PreviewMouseMove(object sender, MouseEventArgs e)
         {
-            if (drawRect && startDrawRect)
+            if (isDrawRect && startDrawRect)
             {
                 changeRectangleSize(e);
                 return;
@@ -131,7 +133,7 @@ namespace WpfApp3
 
         private void canvas_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (drawRect)
+            if (isDrawRect)
             {
                 startDrawRect = false;
             }
@@ -145,16 +147,40 @@ namespace WpfApp3
         private void pencilDraw_Click(object sender, RoutedEventArgs e)
         {
             isDrawWithPencil = !isDrawWithPencil;
+            isFill = false;
+            isDrawRect = false;
+
         }
 
-        private void fill_PreviewMouseLeftButtonDown(object sender, RoutedEventArgs e)
+        private void drawRectangle_Click(object sender, RoutedEventArgs e)
         {
-            fillSomething = !fillSomething;
+            isDrawRect = !isDrawRect;
+            isDrawWithPencil = false;
+            isFill = false;
         }
 
-        private void rect_PreviewMouseLeftButtonDown(object sender, RoutedEventArgs e)
+        private void redFill_Click(object sender, RoutedEventArgs e)
         {
-            drawRect = !drawRect;
+            fillColor = Brushes.Red;
+            isDrawWithPencil = false;
+            isDrawRect = false;
+        }
+
+        private void blueFill_Click(object sender, RoutedEventArgs e)
+        {
+            fillColor = Brushes.Blue;
+            isDrawWithPencil = false;
+            isDrawRect = false;
+        }
+
+        private void oneThickness_Click(object sender, RoutedEventArgs e)
+        {
+            thickness = 1.0;
+        }
+
+        private void twoThickness_Click(object sender, RoutedEventArgs e)
+        {
+            thickness = 2.0;
         }
 
         private void drawRectangle(MouseButtonEventArgs e)
@@ -164,6 +190,7 @@ namespace WpfApp3
             rectangle.Stroke = Brushes.Black;
             rectangle.StrokeThickness = 4;
             rectangle.Fill = Brushes.White;
+            rectangle.StrokeThickness = thickness;
             rectangle.MouseLeftButtonDown += new System.Windows.Input.MouseButtonEventHandler(this.clickOnRect);
 
             Canvas.SetLeft(rectangle, startPoint.X);
@@ -176,12 +203,12 @@ namespace WpfApp3
 
         private void clickOnRect(object sender, MouseButtonEventArgs e)
         {
-            if (drawRect)
+            if (isDrawRect)
                 return;
             else
             {
                 var rect = sender as Rectangle;
-                rect.Fill = Brushes.Red;
+                rect.Fill = fillColor;
             }
         }
 
@@ -191,6 +218,7 @@ namespace WpfApp3
             ellipse.Width = 1;
             ellipse.Height = 1;
             ellipse.Fill = Brushes.Black;
+            ellipse.StrokeThickness = thickness;
             ellipse.Margin = new Thickness(e.GetPosition(null).X, e.GetPosition(null).Y - sizeDifference, 0, 0);
 
             canvas.Children.Add(ellipse);
@@ -204,6 +232,8 @@ namespace WpfApp3
             line.Y1 = previousY;
             line.X2 = previousX = e.GetPosition(null).X;
             line.Y2 = previousY = e.GetPosition(null).Y - sizeDifference;
+            line.StrokeThickness = thickness;
+
             canvas.Children.Add(line);
         }
 
