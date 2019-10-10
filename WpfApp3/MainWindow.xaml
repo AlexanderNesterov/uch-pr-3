@@ -18,7 +18,7 @@
                 <MenuItem Header="Save" Click="save_MouseLeftButtonDown"></MenuItem>
                 <MenuItem Header="Open" Click="open_MouseLeftButtonDown"></MenuItem>
             </MenuItem>
-            <MenuItem Header="Pencil"></MenuItem>
+            <MenuItem Header="Pencil" Click="pencilDraw_Click"></MenuItem>
             <MenuItem Header="Figure">
                 <MenuItem Header="Rectangle"></MenuItem>
                 <MenuItem Header="Oval"></MenuItem>

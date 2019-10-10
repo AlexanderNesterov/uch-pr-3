@@ -24,7 +24,8 @@ namespace WpfApp3
     /// </summary>
     public partial class MainWindow : Window
     {
-        private bool draw = false;
+        private bool isDrawWithPencil = false;
+        private bool startDrawWithPencil = false;
         private bool fillSomething = false;
         private bool drawRect = false;
         private bool startDrawRect = false;
@@ -42,8 +43,6 @@ namespace WpfApp3
 
         private void save_MouseLeftButtonDown(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("save button");
-
             SaveFileDialog dialog = new SaveFileDialog();
             dialog.Filter = "dat files (*.dat)|*.dat";
             dialog.ShowDialog();
@@ -67,8 +66,6 @@ namespace WpfApp3
 
         private void open_MouseLeftButtonDown(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("open button");
-
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Filter = "dat files (*.dat)|*.dat";
             dialog.ShowDialog();
@@ -97,143 +94,57 @@ namespace WpfApp3
             }
         }
 
-        private void clickOnRect(object sender, MouseButtonEventArgs e)
-        {
-            if(drawRect)
-                return;
-            else
-            {
-                var rect = sender as Rectangle;
-                rect.Fill = Brushes.Red;
-            }
-        }
-
         private void canvas_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            //Console.WriteLine(canvas.Height + " " + window.Height + " " + sizeDifference);
+            if (isDrawWithPencil)
+            {
+                startDrawWithPencil = true;
+
+                previousX = e.GetPosition(null).X;
+                previousY = e.GetPosition(null).Y - sizeDifference;
+
+                drawPoint(e);
+                return;
+            }
 
             if (drawRect)
             {
-                startPoint = e.GetPosition(canvas);
-                rectangle = new Rectangle();
-                rectangle.Stroke = Brushes.Black;
-                rectangle.StrokeThickness = 4;
-                // BrushConverter bc = new BrushConverter();
-                // Brush brush = (Brush)bc.ConvertFrom("#00363683");
-                rectangle.Fill = Brushes.White;
-                rectangle.MouseLeftButtonDown += new System.Windows.Input.MouseButtonEventHandler(this.clickOnRect);
-
-                Canvas.SetLeft(rectangle, startPoint.X);
-                Canvas.SetTop(rectangle, startPoint.Y);
-
-                startDrawRect = true;
-
-                canvas.Children.Add(rectangle);
-
+                drawRectangle(e);
                 return;
             }
-
-            if (fillSomething)
-            {
-                Polygon polygon = new Polygon();
-                PointCollection collection = new PointCollection();
-
-                foreach (UIElement el in canvas.Children)
-                {
-                    if (el.GetType() != typeof(Line))
-                    {
-                        continue;
-                    }
-
-                    Point point = new Point(((Line)el).X1, ((Line)el).Y1);
-                    collection.Add(point);
-                }
-
-                polygon.Points = collection;
-                polygon.Fill = Brushes.Red;
-
-                canvas.Children.Add(polygon);
-                return;
-            }
-            //Console.WriteLine("canvas mouse down");
-            previousX = e.GetPosition(null).X;
-            previousY = e.GetPosition(null).Y - sizeDifference;
-
-            Ellipse ellipse = new Ellipse();
-            ellipse.Width = 1;
-            ellipse.Height = 1;
-            ellipse.Fill = Brushes.Black;
-            //ellipse.StrokeThickness = 2;
-            //ellipse.Stroke = Brushes.Black;
-            ellipse.Margin = new Thickness(e.GetPosition(null).X, e.GetPosition(null).Y - sizeDifference, 0, 0);
-
-            canvas.Children.Add(ellipse);
-
-            draw = true;
         }
 
         private void canvas_PreviewMouseMove(object sender, MouseEventArgs e)
         {
             if (drawRect && startDrawRect)
             {
-                var pos = e.GetPosition(canvas);
-
-                var x = Math.Min(pos.X, startPoint.X);
-                var y = Math.Min(pos.Y, startPoint.Y);
-
-                var w = Math.Max(pos.X, startPoint.X) - x;
-                var h = Math.Max(pos.Y, startPoint.Y) - y;
-
-                rectangle.Width = w;
-                rectangle.Height = h;
-
-                Canvas.SetLeft(rectangle, x);
-                Canvas.SetTop(rectangle, y);
-
+                changeRectangleSize(e);
                 return;
             }
 
-            //Console.WriteLine("canvas mouse move");
-            if (draw)
+            if (isDrawWithPencil && startDrawWithPencil)
             {
-                //Ellipse ellipse = new Ellipse();
-                //ellipse.Width = 4;
-                //ellipse.Height = 4;
-                //ellipse.Fill = Brushes.Black;
-                //ellipse.StrokeThickness = 2;
-                //ellipse.Stroke = Brushes.Black;
-                //ellipse.Margin = new Thickness(e.GetPosition(null).X - 1, e.GetPosition(null).Y - 10, 0, 0);
-
-                //canvas.Children.Add(ellipse);
-
-                //Console.WriteLine("canvas mouse move");
-                Line line = new Line();
-                line.Stroke = Brushes.Black;
-                line.X1 = previousX;
-                line.Y1 = previousY;
-                line.X2 = previousX = e.GetPosition(null).X;
-                line.Y2 = previousY = e.GetPosition(null).Y - sizeDifference;
-
-                //line.X2 = 100;
-                //line.Y2 = 100;
-
-                //line.Stretch = Stretch.Fill;
-                //line.StrokeThickness = 4;
-
-                canvas.Children.Add(line);
+                drawLine(e);
+                return;
             }
         }
 
         private void canvas_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            //Console.WriteLine("canvas mouse up");
             if (drawRect)
             {
-                //canvas.Children.Add(rectangle);
                 startDrawRect = false;
             }
 
-            draw = false;
+            if (isDrawWithPencil)
+            {
+                startDrawWithPencil = false;
+            }
+        }
+
+        private void pencilDraw_Click(object sender, RoutedEventArgs e)
+        {
+            isDrawWithPencil = !isDrawWithPencil;
         }
 
         private void fill_PreviewMouseLeftButtonDown(object sender, RoutedEventArgs e)
@@ -244,6 +155,73 @@ namespace WpfApp3
         private void rect_PreviewMouseLeftButtonDown(object sender, RoutedEventArgs e)
         {
             drawRect = !drawRect;
+        }
+
+        private void drawRectangle(MouseButtonEventArgs e)
+        {
+            startPoint = e.GetPosition(canvas);
+            rectangle = new Rectangle();
+            rectangle.Stroke = Brushes.Black;
+            rectangle.StrokeThickness = 4;
+            rectangle.Fill = Brushes.White;
+            rectangle.MouseLeftButtonDown += new System.Windows.Input.MouseButtonEventHandler(this.clickOnRect);
+
+            Canvas.SetLeft(rectangle, startPoint.X);
+            Canvas.SetTop(rectangle, startPoint.Y);
+
+            startDrawRect = true;
+
+            canvas.Children.Add(rectangle);
+        }
+
+        private void clickOnRect(object sender, MouseButtonEventArgs e)
+        {
+            if (drawRect)
+                return;
+            else
+            {
+                var rect = sender as Rectangle;
+                rect.Fill = Brushes.Red;
+            }
+        }
+
+        private void drawPoint(MouseButtonEventArgs e)
+        {
+            Ellipse ellipse = new Ellipse();
+            ellipse.Width = 1;
+            ellipse.Height = 1;
+            ellipse.Fill = Brushes.Black;
+            ellipse.Margin = new Thickness(e.GetPosition(null).X, e.GetPosition(null).Y - sizeDifference, 0, 0);
+
+            canvas.Children.Add(ellipse);
+        }
+
+        private void drawLine(MouseEventArgs e)
+        {
+            Line line = new Line();
+            line.Stroke = Brushes.Black;
+            line.X1 = previousX;
+            line.Y1 = previousY;
+            line.X2 = previousX = e.GetPosition(null).X;
+            line.Y2 = previousY = e.GetPosition(null).Y - sizeDifference;
+            canvas.Children.Add(line);
+        }
+
+        private void changeRectangleSize(MouseEventArgs e)
+        {
+            var pos = e.GetPosition(canvas);
+
+            var x = Math.Min(pos.X, startPoint.X);
+            var y = Math.Min(pos.Y, startPoint.Y);
+
+            var w = Math.Max(pos.X, startPoint.X) - x;
+            var h = Math.Max(pos.Y, startPoint.Y) - y;
+
+            rectangle.Width = w;
+            rectangle.Height = h;
+
+            Canvas.SetLeft(rectangle, x);
+            Canvas.SetTop(rectangle, y);
         }
     }
 }
