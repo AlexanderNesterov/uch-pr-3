@@ -9,10 +9,31 @@
     <Grid x:Name="grid" Height="622" VerticalAlignment="Bottom" Background="#FFFFC5C5">
 
         <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="549" VerticalAlignment="Top" Width="964" PreviewMouseLeftButtonDown="canvas_PreviewMouseLeftButtonDown" PreviewMouseMove="canvas_PreviewMouseMove" PreviewMouseLeftButtonUp="canvas_PreviewMouseLeftButtonUp" Background="#FFF" Margin="0,73,0,0" />
-        <Button x:Name="save" Content="Save" HorizontalAlignment="Left" Margin="32,28,0,0" VerticalAlignment="Top" Width="75" Click="save_MouseLeftButtonDown"/>
-        <Button x:Name="open" Content="Open" HorizontalAlignment="Left" Margin="133,28,0,0" VerticalAlignment="Top" Width="75" Click="open_MouseLeftButtonDown"/>
-        <Button x:Name="fill" Content="Fill" HorizontalAlignment="Left" Margin="227,28,0,0" VerticalAlignment="Top" Width="75" Click="fill_PreviewMouseLeftButtonDown"/>
-        <Button x:Name="rectan" Content="Rect" HorizontalAlignment="Left" Margin="318,28,0,0" VerticalAlignment="Top" Width="75" Click="rect_PreviewMouseLeftButtonDown"/>
+        <!--<Button x:Name="save" Content="Save" HorizontalAlignment="Left" Margin="393,28,0,0" VerticalAlignment="Top" Width="75" Click="save_MouseLeftButtonDown"/>
+        <Button x:Name="open" Content="Open" HorizontalAlignment="Left" Margin="495,28,0,0" VerticalAlignment="Top" Width="75" Click="open_MouseLeftButtonDown"/>-->
+        <Button x:Name="fill" Content="Fill" HorizontalAlignment="Left" Margin="613,28,0,0" VerticalAlignment="Top" Width="75" Click="fill_PreviewMouseLeftButtonDown" RenderTransformOrigin="0.5,0.5"/>
+        <Button x:Name="rectan" Content="Rect" HorizontalAlignment="Left" Margin="731,28,0,0" VerticalAlignment="Top" Width="75" Click="rect_PreviewMouseLeftButtonDown"/>
+        <Menu Height="25" Margin="0,10,0,587">
+            <MenuItem Header="File">
+                <MenuItem Header="Save" Click="save_MouseLeftButtonDown"></MenuItem>
+                <MenuItem Header="Open" Click="open_MouseLeftButtonDown"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="Pencil"></MenuItem>
+            <MenuItem Header="Figure">
+                <MenuItem Header="Rectangle"></MenuItem>
+                <MenuItem Header="Oval"></MenuItem>
+                <MenuItem Header="Triangle"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="Fill">
+                <MenuItem Header="Red"></MenuItem>
+                <MenuItem Header="Blue"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="Thikness">
+                <MenuItem Header="1"></MenuItem>
+                <MenuItem Header="2"></MenuItem>
+            </MenuItem>
+        </Menu>
+
 
     </Grid>
 </Window>
