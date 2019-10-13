@@ -29,12 +29,15 @@ namespace WpfApp3
         private bool isFill = false;
         private bool isDrawRect = false;
         private bool startDrawRect = false;
+        private bool isDrawEllipse = false;
+        private bool startDrawEllipse = false;
         private double previousX = -1;
         private double previousY = -1;
         private double sizeDifference;
         private double thickness = 1.0;
         private SolidColorBrush fillColor = Brushes.White;
         private Rectangle rectangle;
+        private Ellipse ellipse;
         private Point startPoint;
 
         public MainWindow()
@@ -114,6 +117,12 @@ namespace WpfApp3
                 drawRectangle(e);
                 return;
             }
+
+            if (isDrawEllipse)
+            {
+                drawEllipse(e);
+                return;
+            }
         }
 
         private void canvas_PreviewMouseMove(object sender, MouseEventArgs e)
@@ -121,6 +130,12 @@ namespace WpfApp3
             if (isDrawRect && startDrawRect)
             {
                 changeRectangleSize(e);
+                return;
+            }
+
+            if (isDrawEllipse && startDrawEllipse)
+            {
+                changeEllipseSize(e);
                 return;
             }
 
@@ -138,6 +153,11 @@ namespace WpfApp3
                 startDrawRect = false;
             }
 
+            if (isDrawEllipse)
+            {
+                startDrawEllipse = false;
+            }
+
             if (isDrawWithPencil)
             {
                 startDrawWithPencil = false;
@@ -147,7 +167,7 @@ namespace WpfApp3
         private void pencilDraw_Click(object sender, RoutedEventArgs e)
         {
             isDrawWithPencil = !isDrawWithPencil;
-            isFill = false;
+            //isFill = false;
             isDrawRect = false;
 
         }
@@ -156,13 +176,24 @@ namespace WpfApp3
         {
             isDrawRect = !isDrawRect;
             isDrawWithPencil = false;
-            isFill = false;
+            isDrawEllipse = false;
+            //isFill = false;
+        }
+
+        private void drawEllipse_Click(object sender, RoutedEventArgs e)
+        {
+            isDrawEllipse = !isDrawEllipse;
+            isDrawWithPencil = false;
+            //isFill = false;
+            isDrawRect = false;
+
         }
 
         private void redFill_Click(object sender, RoutedEventArgs e)
         {
             fillColor = Brushes.Red;
             isDrawWithPencil = false;
+            isDrawEllipse = false;
             isDrawRect = false;
         }
 
@@ -170,6 +201,7 @@ namespace WpfApp3
         {
             fillColor = Brushes.Blue;
             isDrawWithPencil = false;
+            isDrawEllipse = false;
             isDrawRect = false;
         }
 
@@ -188,7 +220,6 @@ namespace WpfApp3
             startPoint = e.GetPosition(canvas);
             rectangle = new Rectangle();
             rectangle.Stroke = Brushes.Black;
-            rectangle.StrokeThickness = 4;
             rectangle.Fill = Brushes.White;
             rectangle.StrokeThickness = thickness;
             rectangle.MouseLeftButtonDown += new System.Windows.Input.MouseButtonEventHandler(this.clickOnRect);
@@ -201,6 +232,23 @@ namespace WpfApp3
             canvas.Children.Add(rectangle);
         }
 
+        private void drawEllipse(MouseButtonEventArgs e)
+        {
+            startPoint = e.GetPosition(canvas);
+            ellipse = new Ellipse();
+            ellipse.Stroke = Brushes.Black;
+            ellipse.Fill = Brushes.White;
+            ellipse.StrokeThickness = thickness;
+            ellipse.MouseLeftButtonDown += new System.Windows.Input.MouseButtonEventHandler(this.clickOnEllipse);
+
+            Canvas.SetLeft(ellipse, startPoint.X);
+            Canvas.SetTop(ellipse, startPoint.Y);
+
+            startDrawEllipse = true;
+
+            canvas.Children.Add(ellipse);
+        }
+
         private void clickOnRect(object sender, MouseButtonEventArgs e)
         {
             if (isDrawRect)
@@ -209,6 +257,17 @@ namespace WpfApp3
             {
                 var rect = sender as Rectangle;
                 rect.Fill = fillColor;
+            }
+        }
+
+        private void clickOnEllipse(object sender, MouseButtonEventArgs e)
+        {
+            if (isDrawEllipse)
+                return;
+            else
+            {
+                var rect = sender as Ellipse;
+                ellipse.Fill = fillColor;
             }
         }
 
@@ -252,6 +311,23 @@ namespace WpfApp3
 
             Canvas.SetLeft(rectangle, x);
             Canvas.SetTop(rectangle, y);
+        }
+
+        private void changeEllipseSize(MouseEventArgs e)
+        {
+            var pos = e.GetPosition(canvas);
+
+            var x = Math.Min(pos.X, startPoint.X);
+            var y = Math.Min(pos.Y, startPoint.Y);
+
+            var w = Math.Max(pos.X, startPoint.X) - x;
+            var h = Math.Max(pos.Y, startPoint.Y) - y;
+
+            ellipse.Width = w;
+            ellipse.Height = h;
+
+            Canvas.SetLeft(ellipse, x);
+            Canvas.SetTop(ellipse, y);
         }
     }
 }
