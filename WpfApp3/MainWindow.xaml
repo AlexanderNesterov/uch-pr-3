@@ -18,7 +18,7 @@
             <MenuItem Header="Figure">
                 <MenuItem Header="Rectangle" Click="drawRectangle_Click"></MenuItem>
                 <MenuItem Header="Oval" Click="drawEllipse_Click"></MenuItem>
-                <MenuItem Header="Triangle"></MenuItem>
+                <MenuItem Header="Triangle" Click="drawTriangle_Click"></MenuItem>
             </MenuItem>
             <MenuItem Header="Fill">
                 <MenuItem Header="Red" Click="redFill_Click"></MenuItem>
