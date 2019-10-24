@@ -175,6 +175,13 @@ namespace WpfApp3
 
         private void drawTriangle_Click(object sender, RoutedEventArgs e)
         {
+            if (!isDrawFigure)
+            {
+                isDrawFigure = true;
+            }
+            figure = new Polygon();
+            isDrawWithPencil = false;
+            isFill = false;
         }
 
         private void redFill_Click(object sender, RoutedEventArgs e)
@@ -212,8 +219,10 @@ namespace WpfApp3
             figure.StrokeThickness = thickness;
             figure.MouseLeftButtonDown += new System.Windows.Input.MouseButtonEventHandler(this.clickOnFigure);
 
-            Canvas.SetLeft(figure, startPoint.X);
-            Canvas.SetTop(figure, startPoint.Y);
+            if (figure.GetType() != typeof(Polygon)) {
+                Canvas.SetLeft(figure, startPoint.X);
+                Canvas.SetTop(figure, startPoint.Y);
+            }
 
             startDrawFigure = true;
 
@@ -254,8 +263,30 @@ namespace WpfApp3
             canvas.Children.Add(line);
         }
 
+        private void changeTriangleSize(MouseEventArgs e)
+        {
+            var triangle = (Polygon)figure;            
+            var posCan = e.GetPosition(canvas);
+            Point A = startPoint;
+            A.Y = posCan.Y;
+            Point B = posCan;
+            Point C = startPoint;            
+            PointCollection myPointCollection = new PointCollection();
+            myPointCollection.Add(A);
+            myPointCollection.Add(C);
+            myPointCollection.Add(B);
+            triangle.Points = myPointCollection;
+            figure = triangle;
+        }
+
         private void changeFigureSize(MouseEventArgs e)
         {
+            if (figure.GetType() == typeof(Polygon))
+            {
+                changeTriangleSize(e);
+                return;
+            }
+
             var pos = e.GetPosition(canvas);
 
             var x = Math.Min(pos.X, startPoint.X);
@@ -271,6 +302,22 @@ namespace WpfApp3
             Canvas.SetTop(figure, y);
         }
 
+        private double CalculateMWithTwoPoints(double x1, double y1, double x2, double y2)
+        {
+            return (y2 - y1) / (x2 - x1);
+        }
+
+        private PointCollection CalculatePoints(Point cPoint, Point pPoint, double gamma, double rad)
+        {
+            double mPC = this.CalculateMWithTwoPoints(cPoint.X, cPoint.Y, pPoint.X, pPoint.Y);
+            double mN = -(1 / mPC);
+            double PA = Math.Tan(gamma) * rad;
+            double alpha = Math.Atan(mN);
+            double deltaY = Math.Sin(alpha) * PA;
+            double deltaX = Math.Cos(alpha) * PA;
+            return new PointCollection() { new Point(pPoint.X - deltaX, pPoint.Y - deltaY), new Point(pPoint.X + deltaX, pPoint.Y + deltaY), cPoint };
+        }
+
         private Shape createFigure()
         {
             if (figure.GetType() == typeof(Rectangle))
@@ -281,6 +328,11 @@ namespace WpfApp3
             if (figure.GetType() == typeof(Ellipse))
             {
                 return new Ellipse();
+            }
+
+            if (figure.GetType() == typeof(Polygon))
+            {
+                return new Polygon();
             }
 
             return null;
