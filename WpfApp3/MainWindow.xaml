@@ -20,9 +20,7 @@
                 <MenuItem Header="Oval" Click="drawEllipse_Click"></MenuItem>
                 <MenuItem Header="Triangle" Click="drawTriangle_Click"></MenuItem>
             </MenuItem>
-            <MenuItem Header="Fill">
-                <MenuItem Header="Red" Click="redFill_Click"></MenuItem>
-                <MenuItem Header="Blue" Click="blueFill_Click"></MenuItem>
+            <MenuItem x:Name="colorsMenu" Header="Fill">
             </MenuItem>
             <MenuItem Header="Thikness">
                 <MenuItem Header="1" Click="oneThickness_Click"></MenuItem>

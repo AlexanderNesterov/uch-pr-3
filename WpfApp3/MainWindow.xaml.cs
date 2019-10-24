@@ -36,11 +36,31 @@ namespace WpfApp3
         private SolidColorBrush fillColor = Brushes.White;
         private Point startPoint;
         private Shape figure;
+        private enum Colors
+        {
+            Red,
+            Black,
+            Blue,
+            Green,
+            Yellow
+        }
 
         public MainWindow()
         {
             InitializeComponent();
             sizeDifference = canvas.Margin.Top - 8;
+
+            var items = colorsMenu.Items;
+            
+            var z = Enum.GetValues(typeof (Colors));
+            foreach(Colors color in z )
+            {
+                var newItem = new MenuItem();
+                newItem.Header = color;
+                newItem.Click += someColorFill_Click;
+                items.Add(newItem);
+            }
+
         }
 
         private void save_MouseLeftButtonDown(object sender, RoutedEventArgs e)
@@ -195,6 +215,35 @@ namespace WpfApp3
         private void blueFill_Click(object sender, RoutedEventArgs e)
         {
             fillColor = Brushes.Blue;
+            isFill = true;
+            isDrawWithPencil = false;
+            isDrawFigure = false;
+        }
+
+        private void someColorFill_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem menu = (MenuItem)sender;
+            switch (menu.Header)
+            {
+                case Colors.Red:
+                    fillColor = Brushes.Red;
+                    break;
+                case Colors.Black:
+                    fillColor = Brushes.Black;
+                    break;
+                case Colors.Blue:
+                    fillColor = Brushes.Blue;
+                    break;
+                case Colors.Green:
+                    fillColor = Brushes.Green;
+                    break;
+                case Colors.Yellow:
+                    fillColor = Brushes.Yellow;
+                    break;
+                default:
+                    fillColor = Brushes.White;
+                    break;
+            }
             isFill = true;
             isDrawWithPencil = false;
             isDrawFigure = false;
