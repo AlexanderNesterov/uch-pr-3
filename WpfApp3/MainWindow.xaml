@@ -20,12 +20,12 @@
                 <MenuItem Header="Oval" Click="drawEllipse_Click"></MenuItem>
                 <MenuItem Header="Triangle" Click="drawTriangle_Click"></MenuItem>
             </MenuItem>
-            <MenuItem x:Name="colorsMenu" Header="Fill">
-            </MenuItem>
+            <MenuItem x:Name="colorsMenu" Header="Fill"/>
             <MenuItem Header="Thikness">
                 <MenuItem Header="1" Click="oneThickness_Click"></MenuItem>
                 <MenuItem Header="2" Click="twoThickness_Click"></MenuItem>
             </MenuItem>
+            <MenuItem Header="Clear" Click="ClearCanvas_Click"/>
         </Menu>
 
 

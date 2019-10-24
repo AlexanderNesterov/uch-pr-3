@@ -204,22 +204,6 @@ namespace WpfApp3
             isFill = false;
         }
 
-        private void redFill_Click(object sender, RoutedEventArgs e)
-        {
-            fillColor = Brushes.Red;
-            isFill = true;
-            isDrawWithPencil = false;
-            isDrawFigure = false;
-        }
-
-        private void blueFill_Click(object sender, RoutedEventArgs e)
-        {
-            fillColor = Brushes.Blue;
-            isFill = true;
-            isDrawWithPencil = false;
-            isDrawFigure = false;
-        }
-
         private void someColorFill_Click(object sender, RoutedEventArgs e)
         {
             MenuItem menu = (MenuItem)sender;
@@ -385,6 +369,11 @@ namespace WpfApp3
             }
 
             return null;
+        }
+
+        private void ClearCanvas_Click(object sender, RoutedEventArgs e)
+        {
+            canvas.Children.Clear();
         }
     }
 }
